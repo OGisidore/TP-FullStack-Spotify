@@ -1,0 +1,73 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  :root {
+    --background: 29 70% 98%;
+    --foreground: 29 56% 4%;
+    --muted: 149 15% 90%;
+    --muted-foreground: 149 4% 35%;
+    --popover: 29 70% 98%;
+    --popover-foreground: 29 56% 4%;
+    --card: 29 70% 97%;
+    --card-foreground: 29 56% 3%;
+    --border: 29 13% 90%;
+    --input: 29 13% 90%;
+    --primary: 29 56% 26%;
+    --primary-foreground: 29 56% 86%;
+    --secondary: 149 56% 26%;
+    --secondary-foreground: 0 0% 100%;
+    --accent: 269 56% 26%;
+    --accent-foreground: 269 56% 86%;
+    --destructive: 16 89% 38%;
+    --destructive-foreground: 0 0% 100%;
+    --ring: 29 56% 26%;
+    --radius: 0.5rem;
+  }
+
+  .dark {
+    --background: 29 50% 2%;
+    --foreground: 29 38% 99%;
+    --muted: 149 15% 10%;
+    --muted-foreground: 149 4% 65%;
+    --popover: 29 50% 2%;
+    --popover-foreground: 29 38% 99%;
+    --card: 29 50% 3%;
+    --card-foreground: 0 0% 100%;
+    --border: 29 13% 12%;
+    --input: 29 13% 12%;
+    --primary: 29 56% 26%;
+    --primary-foreground: 29 56% 86%;
+    --secondary: 149 56% 26%;
+    --secondary-foreground: 0 0% 100%;
+    --accent: 269 56% 26%;
+    --accent-foreground: 269 56% 86%;
+    --destructive: 16 89% 55%;
+    --destructive-foreground: 0 0% 0%;
+    --ring: 29 56% 26%;
+    --radius: 0.5rem;
+  }
+}
+
+@layer base {
+  * {
+    @apply border-border;
+  }
+  body {
+    @apply bg-background text-foreground h-full w-full font-sans;
+    font-feature-settings: 'rlig' 1, 'calt' 1;
+  }
+  .input {
+    @apply flex h-10 w-full rounded-md border-2 border-input bg-background px-3 py-2 text-sm ring-offset-background file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50;
+  }
+  .tr {
+    @apply border-b transition-colors hover:bg-muted/50 data-[state=selected]:bg-muted;
+  }
+  .td{
+    @apply p-4 align-middle [&:has([role=checkbox])]:pr-0
+  }
+  .th{
+    @apply h-12 px-4 text-left align-middle font-medium text-muted-foreground [&:has([role=checkbox])]:pr-0
+  }
+}
