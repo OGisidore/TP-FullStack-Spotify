@@ -26,6 +26,8 @@ export const getLatestData = async (entityName: string) => {
 
 export const getDatasById = async (entityName: string, id: string) => {
   const url = apiBase + entityName + '/' + id
+  console.log(url);
+  
   const datas = await get(url)
   return datas
 }

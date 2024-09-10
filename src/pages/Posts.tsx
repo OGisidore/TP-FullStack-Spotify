@@ -30,7 +30,7 @@ export const Posts: React.FC = () => {
         {posts.map((post: Post) => {
           return (
             <Link
-              to={'/posts/:' + post._id}
+              to={'/post/' + post._id}
               key={post._id}
               className="w-full p-4 flex border-b-2 shadow-md justify-between items-center"
             >

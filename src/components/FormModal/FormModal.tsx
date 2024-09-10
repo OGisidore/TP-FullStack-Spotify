@@ -196,6 +196,7 @@ const FormModal: FC<FormModalProps> = ({ closeModal, current_ }) => {
                 {' '}
                 Content
               </label>
+              
               <textarea
                 name="content"
                 onChange={formik.handleChange}

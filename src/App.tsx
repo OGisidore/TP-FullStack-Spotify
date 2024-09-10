@@ -7,6 +7,7 @@ import Header from './components/Header/Header'
 import { Login } from './pages/Login'
 import { Signup } from './pages/Signup'
 import { Admin } from './pages/Admin'
+import { PostId } from './pages/Post'
 
 const App: React.FC = () => {
   return (
@@ -17,6 +18,7 @@ const App: React.FC = () => {
           <Routes>
             <Route path="/" element={<Home />} />
             <Route path="/posts" element={<Posts />} />
+            <Route path="/post/:id" element={<PostId />} />
             <Route path="/login" element={<Login />} />
             <Route path="/signup" element={<Signup />} />
             <Route path="/admin" element={<Admin />} />
