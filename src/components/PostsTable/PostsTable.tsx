@@ -19,18 +19,22 @@ const PostsTable: FC<PostsTableProps> = () => {
   const [openForm, setOpenForm] = useState<boolean>(false)
 
   const posts: Post[] = useSelector(getPost)
-  console.log(posts);
-  
+  console.log(posts)
+
   const dispatch = useDispatch()
 
   const handleDelete = async () => {
     try {
+      // delete from backend
       await deleteData('posts', currentPoste?._id!)
+      // delete from local
+
       dispatch({
         type: REMOVE_FROM_STORAGE,
         key: 'posts',
         payload: currentPoste,
       })
+
       setOpenPopup(false)
     } catch (error) {
       console.log(error)

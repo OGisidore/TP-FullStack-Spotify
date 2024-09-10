@@ -7,23 +7,27 @@ const storage = getItem('storage')
 const initState: any = storage ? storage : {}
 export const storageReducers = (
   state = initState,
-  action:   StorageAction = { type: null, key: null, payload: null }
+  action: StorageAction = { type: null, key: null, payload: null }
 ) => {
   switch (action.type) {
     case ADD_TO_STORAGE:
       if (action.key) {
+        // check if unique is true
         if (!action.unique) {
+          // check if state of key exist
           if (!state[action.key]) {
             state[action.key] = []
           }
+          //check if the update or add(create)
           const existing = state[action.key].find(
             (exist: any) => exist._id === action.payload?._id
           )
           if (!existing) {
             state[action.key].push(action.payload)
-          } else{
-            const existingIndex = state[action.key]
-                .findIndex((exist: any) => exist._id === action.payload?._id)
+          } else {
+            const existingIndex = state[action.key].findIndex(
+              (exist: any) => exist._id === action.payload?._id
+            )
             state[action.key][existingIndex] = action.payload
 
             state[action.key] = [...state[action.key]]

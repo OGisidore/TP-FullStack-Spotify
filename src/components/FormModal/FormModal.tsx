@@ -27,29 +27,34 @@ const FormModal: FC<FormModalProps> = ({ closeModal, current_ }) => {
   const addDatas = async (value: Post) => {
     try {
       if (current_) {
+        // update localy befor send it to backend
         dispatch({
           type: ADD_TO_STORAGE,
           key: 'posts',
           unique: false,
           payload: { ...value },
         })
+        // get file and
         value.image = fileImage
         const formData = new FormData()
         if (value.image) {
           formData.append('image', value.image)
         }
+        // delete value image
         delete value.image
         formData.append('post', JSON.stringify(value))
         await updateData('posts', current_._id, formData)
-       
+
         closeModal()
       } else {
-        
+        // get file and
         value.image = fileImage
         const formData = new FormData()
         if (value.image) {
           formData.append('image', value.image)
         }
+        // delete value image
+
         delete value.image
         formData.append('post', JSON.stringify(value))
         await addDataWithFile('posts', formData)
