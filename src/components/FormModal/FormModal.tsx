@@ -1,4 +1,4 @@
-import React, { FC } from 'react'
+import React, { FC, useState } from 'react'
 import './FormModal.css'
 import { Button } from '../Ui/Button'
 import { X } from 'lucide-react'
@@ -6,7 +6,12 @@ import { Category } from '../../Models/Category'
 import { Post } from '../../Models/Post'
 import { useFormik } from 'formik'
 import { generateID, validatePostForm } from '../../Helpers/utiles/utils'
-import { addData, updateData } from '../../Helpers/api/espero.indexdb'
+import {
+  addDataWithFile,
+  updateData,
+} from '../../Helpers/api/backendConnect/api'
+import { useDispatch } from 'react-redux'
+import { ADD_TO_STORAGE } from '../../reducer/Action/action.types'
 // import { Button } from '../Ui/Button'
 
 interface FormModalProps {
@@ -16,6 +21,36 @@ interface FormModalProps {
 
 const FormModal: FC<FormModalProps> = ({ closeModal, current_ }) => {
   const validate = (values: any) => validatePostForm(values)
+  const [fileImage, setFileImage] = useState<File>()
+  const dispatch = useDispatch()
+
+  const addDatas = async (value: Post) => {
+    value.image = fileImage
+    console.log(fileImage instanceof File)
+    const formData = new FormData()
+    if (value.image) {
+      formData.append('image', value.image)
+    }
+    delete value.image
+    formData.append('post', JSON.stringify(value))
+    try {
+      if (current_) {
+        await updateData('posts', current_._id, formData)
+        closeModal()
+      } else {
+        await addDataWithFile('posts', formData)
+        closeModal()
+      }
+      dispatch({
+        type: ADD_TO_STORAGE,
+        key: 'posts',
+        unique: false,
+        payload: value,
+      })
+    } catch (error) {
+      console.log(error)
+    }
+  }
 
   const categories: Category[] = [
     {
@@ -49,41 +84,19 @@ const FormModal: FC<FormModalProps> = ({ closeModal, current_ }) => {
         'Protégez vos systèmes et données avec les dernières pratiques de cybersécurité.',
     },
   ]
-  // const userId = useSelector(getUserID)
   const formik = useFormik({
     initialValues: current_
       ? current_
       : {
           _id: generateID(),
-          title: 'manger son pain',
-          content: 'lorem',
-          category: 'develop',
-          image: '',
-          publishedAt: new Date(),
-          // user: userId,
+          title: '',
+          content: '',
+          category: '',
         },
     validate,
-    onSubmit: async (value: Post) => {
-      let result
-      if (current_) {
-        // const id = current_._id
-        // value.image = await convertFileToBlob(value.image as File)
-        result = await updateData('posts', value)
-      } else {
-        // value.image = await convertFileToBlob(value.image as File)
-
-        result = await addData('address', value)
-      }
-      if (result?.status === 200) {
-        console.log(result.message)
-        formik.resetForm()
-
-        // setFomError("")
-      } else {
-        console.log(result.message)
-
-        // setFomError(result.message)
-      }
+    onSubmit: async (data: Post) => {
+      addDatas(data)
+      formik.resetForm()
     },
   })
 
@@ -100,6 +113,7 @@ const FormModal: FC<FormModalProps> = ({ closeModal, current_ }) => {
         <div className="body">
           <form
             onSubmit={formik.handleSubmit}
+            encType="multipart/form-data"
             className="border shadow-lg rounded-md p-5 w-full"
           >
             <div className="username mt-4 grid w-full  items-center gap-3">
@@ -119,7 +133,11 @@ const FormModal: FC<FormModalProps> = ({ closeModal, current_ }) => {
                 name="title"
                 id=""
               />
-              {formik.errors.title ? <div>{formik.errors.title}</div> : null}
+              {formik.errors.title ? (
+                <div className="text-destructive font-bold">
+                  {formik.errors.title}
+                </div>
+              ) : null}
             </div>
             <div className="category mt-4 grid w-full  items-center gap-3">
               <label
@@ -151,7 +169,9 @@ const FormModal: FC<FormModalProps> = ({ closeModal, current_ }) => {
                 <option value=""></option>
               </select>
               {formik.errors.category ? (
-                <div>{formik.errors.category}</div>
+                <div className="text-destructive font-bold">
+                  {formik.errors.category}
+                </div>
               ) : null}
             </div>
             <div className="content mt-4 grid w-full  items-center gap-3">
@@ -170,7 +190,9 @@ const FormModal: FC<FormModalProps> = ({ closeModal, current_ }) => {
                 className="flex min-h-[80px] w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50"
               ></textarea>
               {formik.errors.content ? (
-                <div>{formik.errors.content}</div>
+                <div className="text-destructive font-bold">
+                  {formik.errors.content}
+                </div>
               ) : null}
             </div>
 
@@ -184,7 +206,7 @@ const FormModal: FC<FormModalProps> = ({ closeModal, current_ }) => {
               <input
                 className="input"
                 placeholder="image"
-                onChange={formik.handleChange}
+                onChange={(e) => setFileImage(e.target.files?.[0])}
                 type="file"
                 name="image"
                 id=""

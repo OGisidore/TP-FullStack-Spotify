@@ -1,8 +1,11 @@
 import { db } from './espero.db'
 
-export const addData = async (entityName: string, data: any) => {
+export const addPost = async (entityName: string, data: any) => {
   try {
+
+    console.log({entityName, data})
     await db.addData(entityName, data)
+    
     return {
       status: 200,
       message: ' added successfully',

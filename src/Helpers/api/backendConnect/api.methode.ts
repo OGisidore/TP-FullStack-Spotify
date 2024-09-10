@@ -17,7 +17,11 @@ export const post = async (url: string, data: any, options: any = {}) => {
   try {
     console.log({ data })
     options.method = 'POST'
-    options.body = JSON.stringify(data)
+    if (typeof data === 'string') {
+      options.body = data // Si `data` est déjà une chaîne JSON, utilisez-le directement
+    } else {
+      options.body = JSON.stringify(data) // Sinon, convertissez l'objet en chaîne JSON
+    }
     options.headers = {
       ...options.headers,
       Accept: 'application/json',
@@ -32,7 +36,38 @@ export const post = async (url: string, data: any, options: any = {}) => {
       }
     }
     return await response.json()
-  } catch (error) {
+  } catch (error : any) {
+    console.log(error.error)
+
+    return { isSuccess: false, error }
+  }
+}
+export const postWithFile = async (
+  url: string,
+  data: any,
+  options: any = {}
+) => {
+  console.log(url)
+  try {
+    options.method = 'POST'
+    options.body = data
+    options.headers = {
+      ...options.headers,
+      Accept: 'application/json',
+      // 'Content-Type': 'multipart/form-data',
+    }
+    const response = await fetch(url, options)
+    if (!response.ok) {
+      const error = await response.json()
+      return {
+        ...error,
+        isSuccess: false,
+      }
+    }
+    return await response.json()
+  } catch (error : any) {
+    console.log(error.error)
+
     return { isSuccess: false, error }
   }
 }
@@ -63,22 +98,22 @@ export const put = async (url: string, data: any, options: any = {}) => {
   console.log(url)
   try {
     options.method = 'PUT'
-    options.body = JSON.stringify(data)
+    options.body = data
     options.headers = {
       ...options.headers,
       Accept: 'application/json',
-      'Content-Type': 'application/json',
+      // 'Content-Type': 'application/json',
     }
     const response = await fetch(url, options)
-    if (!response.ok) {
+    if (response.status !== 203) {
       const error = await response.json()
       return {
         ...error,
         isSuccess: false,
       }
     }
-    return await response.json()
-  } catch (error) {
-    return { isSuccess: false, error }
+    // return await response.json()
+  } catch (error : any) {
+    return { isSuccess: false, error: error.message }
   }
 }

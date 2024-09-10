@@ -1,10 +1,44 @@
-import React, { Fragment, useState } from 'react'
+import React, { Fragment, useEffect, useState } from 'react'
 import { Button } from '../components/Ui/Button'
 import FormModal from '../components/FormModal/FormModal'
 import PostsTable from '../components/PostsTable/PostsTable'
-
+import { useDispatch } from 'react-redux'
+import { ADD_TO_STORAGE } from '../reducer/Action/action.types'
+import { getData } from '../Helpers/api/backendConnect/api'
+import { Post } from '../Models/Post'
+interface ApiResponse {
+  status: number;
+  posts: Post[];
+} 
 export const Admin: React.FC = () => {
   const [open, setOpen] = useState<boolean>(false)
+  const dispatch = useDispatch()
+  const getPosts = async () => {
+    try {
+      var JsonDatas: ApiResponse = await getData('posts')
+      if (JsonDatas.status === 200) {
+        console.log(JsonDatas.posts)
+        JsonDatas.posts.forEach((post: Post) => {
+          dispatch({
+            type: ADD_TO_STORAGE,
+            key: 'posts',
+            unique: false,
+            payload: post,
+          });
+        });
+          
+          
+        
+      
+        // setPosts(JsonDatas.posts as Post[])
+      }
+    } catch (error) {
+      console.log('error' + error)
+    }
+  }
+  useEffect(() => {
+    getPosts()
+  }, [open])
   return (
     <Fragment>
       <section className="w-full relative md:w-[50rem] flex flex-col items-center  mt-10">
