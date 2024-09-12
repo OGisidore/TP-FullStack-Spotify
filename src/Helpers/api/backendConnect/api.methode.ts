@@ -1,5 +1,14 @@
+import { getItem } from "../../../StorageService/localStorage"
+
+
+var token = getItem("auth")?.token
 export const get = async (url: string, options: any = {}) => {
   try {
+    options.headers={
+      ... options.headers,
+      'Authorization': 'Bearer ' + token
+
+    }
     const response = await fetch(url, options)
     if (!response.ok) {
       return {
@@ -17,15 +26,12 @@ export const post = async (url: string, data: any, options: any = {}) => {
   try {
     console.log({ data })
     options.method = 'POST'
-    if (typeof data === 'string') {
-      options.body = data // Si `data` est déjà une chaîne JSON, utilisez-le directement
-    } else {
-      options.body = JSON.stringify(data) // Sinon, convertissez l'objet en chaîne JSON
-    }
+    options.body = JSON.stringify(data)
     options.headers = {
       ...options.headers,
       Accept: 'application/json',
       'Content-Type': 'application/json',
+      'Authorization': 'Bearer ' + token
     }
     const response = await fetch(url, options)
     if (!response.ok) {
@@ -36,7 +42,7 @@ export const post = async (url: string, data: any, options: any = {}) => {
       }
     }
     return await response.json()
-  } catch (error : any) {
+  } catch (error: any) {
     console.log(error.error)
 
     return { isSuccess: false, error }
@@ -47,13 +53,14 @@ export const postWithFile = async (
   data: any,
   options: any = {}
 ) => {
-  console.log(url)
   try {
     options.method = 'POST'
     options.body = data
     options.headers = {
       ...options.headers,
       Accept: 'application/json',
+      'Authorization': 'Bearer ' + token
+
       // 'Content-Type': 'multipart/form-data',
     }
     const response = await fetch(url, options)
@@ -65,7 +72,7 @@ export const postWithFile = async (
       }
     }
     return await response.json()
-  } catch (error : any) {
+  } catch (error: any) {
     console.log(error.error)
 
     return { isSuccess: false, error }
@@ -80,6 +87,8 @@ export const remove = async (url: string, options: any = {}) => {
       ...options.headers,
       Accept: 'application/json',
       'Content-Type': 'application/json',
+      'Authorization': 'Bearer ' + token
+
     }
     const response = await fetch(url, options)
     if (!response.ok) {
@@ -102,6 +111,8 @@ export const put = async (url: string, data: any, options: any = {}) => {
     options.headers = {
       ...options.headers,
       Accept: 'application/json',
+      'Authorization': 'Bearer ' + token
+
       // 'Content-Type': 'application/json',
     }
     const response = await fetch(url, options)
@@ -113,7 +124,7 @@ export const put = async (url: string, data: any, options: any = {}) => {
       }
     }
     // return await response.json()
-  } catch (error : any) {
+  } catch (error: any) {
     return { isSuccess: false, error: error.message }
   }
 }

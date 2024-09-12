@@ -8,6 +8,7 @@ import { Login } from './pages/Login'
 import { Signup } from './pages/Signup'
 import { Admin } from './pages/Admin'
 import { PostId } from './pages/Post'
+import PrivateRoute from './guard/privates.routes/private.routes'
 
 const App: React.FC = () => {
   return (
@@ -17,11 +18,11 @@ const App: React.FC = () => {
         <div className="container w-fit">
           <Routes>
             <Route path="/" element={<Home />} />
-            <Route path="/posts" element={<Posts />} />
-            <Route path="/post/:id" element={<PostId />} />
+            <Route path="/posts" element={<PrivateRoute><Posts/></PrivateRoute>} />
+            <Route path="/post/:id" element={<PrivateRoute><PostId /></PrivateRoute>} />
             <Route path="/login" element={<Login />} />
             <Route path="/signup" element={<Signup />} />
-            <Route path="/admin" element={<Admin />} />
+            <Route path="/admin" element={<PrivateRoute><Admin /></PrivateRoute>} />
           </Routes>
         </div>
       </div>

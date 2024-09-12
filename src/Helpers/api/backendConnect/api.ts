@@ -17,6 +17,11 @@ export const getData = async (entityName: string) => {
   const datas = await get(url)
   return datas
 }
+export const getUser = async (entityName: string, id: string) => {
+  const url = apiBase + entityName + '/' + id
+  const datas = await get(url)
+  return datas
+}
 
 export const getLatestData = async (entityName: string) => {
   const url = apiBase + entityName + '/latest'
@@ -26,14 +31,21 @@ export const getLatestData = async (entityName: string) => {
 
 export const getDatasById = async (entityName: string, id: string) => {
   const url = apiBase + entityName + '/' + id
-  console.log(url);
-  
+  console.log(url)
+
+  const datas = await get(url)
+  return datas
+}
+export const getDatasByUserId = async (entityName: string, userId: string) => {
+  const url = apiBase + entityName + '/byuser/' + userId
+  console.log(url)
+
   const datas = await get(url)
   return datas
 }
 
 export const signup = async (user: User) => {
-  const url = apiBase + 'user/signup'
+  const url = apiBase + 'users/signup'
   const datas = await post(url, user)
   return datas
 }
@@ -64,11 +76,11 @@ export const deleteData = async (entityName: string, id: string) => {
 }
 
 export const signin = async (user: User) => {
-  const url = apiBase + 'user/signin'
+  const url = apiBase + 'users/login'
   const datas = await post(url, user)
   if (datas.isSuccess) {
     //auth success
-    setItem('auth', { token: datas.token, userId: datas.userId })
+    setItem('auth', { token: datas.token, userId: datas.userId }, datas.expire)
     console.log(datas)
   }
   return datas

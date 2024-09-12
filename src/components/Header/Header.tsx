@@ -1,16 +1,16 @@
-import React, { FC, useEffect, useState } from 'react'
-import './Header.css'
+import { FC, useEffect } from 'react'
+import { useSelector } from 'react-redux'
 import { Link } from 'react-router-dom'
+import { getAuthState } from '../../reducer/selector/selector.types'
 import { Button } from '../Ui/Button'
+import './Header.css'
 
 interface HeaderProps {}
 const Header: FC<HeaderProps> = () => {
-  const [isAuth, setIsAuth] = useState<boolean>(false)
-  useEffect(() => {
-    setIsAuth(true)
-  }, [])
+  const isAuth = useSelector(getAuthState)
+  useEffect(() => {}, [])
   return (
-    <div className="Header w-full border-b shadow-sm sticky top-0 ">
+    <div className="Header w-full border-b bg-background/4 backdrop-blur-lg shadow-sm sticky top-0 ">
       <section>
         <nav className="">
           <div className="mx-auto max-w-7xl px-2 sm:px-6 lg:px-8">
@@ -60,14 +60,14 @@ const Header: FC<HeaderProps> = () => {
                   <div className="flex items-center space-x-4">
                     <Link
                       to={'/posts'}
-                      className="rounded-md border-border shadow-md  px-3 py-2 text-2xl   text-foreground"
+                      className="rounded-md border-border shadow-md bg-background px-3 py-2 text-2xl   text-foreground"
                     >
                       Posts
                     </Link>
                     {isAuth && (
                       <Link
                         to={'/admin'}
-                        className="rounded-md border-border shadow-md  px-3 py-2 text-2xl   text-foreground"
+                        className="rounded-md border-border bg-background shadow-md  px-3 py-2 text-2xl   text-foreground"
                       >
                         Admin
                       </Link>

@@ -69,8 +69,8 @@ const PostsTable: FC<PostsTableProps> = () => {
         </tbody>
       </table>
       {openPopup && (
-        <div className="alertDeleteModal absolute top-0 left-0 bg-background z-10 w-full flex items-center justify-center">
-          <div className="content w-full p-4">
+        <div className="alertDeleteModal absolute h-screen backdrop-blur-sm top-0 left-0 bg-popover/4 z-10 w-full flex  justify-center">
+          <div className="content w-[40%] bg-background h-fit p-4">
             <p>
               {' '}
               Are you sure to delete this post titled : {currentPoste?.title}

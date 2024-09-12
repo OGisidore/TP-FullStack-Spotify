@@ -1,17 +1,18 @@
-import React, { FC, useState } from 'react'
-import './FormModal.css'
-import { Button } from '../Ui/Button'
-import { X } from 'lucide-react'
-import { Category } from '../../Models/Category'
-import { Post } from '../../Models/Post'
 import { useFormik } from 'formik'
-import { generateID, validatePostForm } from '../../Helpers/utiles/utils'
+import { X } from 'lucide-react'
+import { FC, useState } from 'react'
+import { useDispatch } from 'react-redux'
 import {
   addDataWithFile,
   updateData,
 } from '../../Helpers/api/backendConnect/api'
-import { useDispatch } from 'react-redux'
+import { generateID, validatePostForm } from '../../Helpers/utiles/utils'
+import { Category } from '../../Models/Category'
+import { Post } from '../../Models/Post'
 import { ADD_TO_STORAGE } from '../../reducer/Action/action.types'
+import { getItem } from '../../StorageService/localStorage'
+import { Button } from '../Ui/Button'
+import './FormModal.css'
 // import { Button } from '../Ui/Button'
 
 interface FormModalProps {
@@ -23,6 +24,7 @@ const FormModal: FC<FormModalProps> = ({ closeModal, current_ }) => {
   const validate = (values: any) => validatePostForm(values)
   const [fileImage, setFileImage] = useState<File>()
   const dispatch = useDispatch()
+  const userId = getItem('auth').userId
 
   const addDatas = async (value: Post) => {
     try {
@@ -49,17 +51,16 @@ const FormModal: FC<FormModalProps> = ({ closeModal, current_ }) => {
       } else {
         // get file and
         value.image = fileImage
+        value.userId = userId
         const formData = new FormData()
         if (value.image) {
           formData.append('image', value.image)
         }
-        // delete value image
 
         delete value.image
         formData.append('post', JSON.stringify(value))
-        await addDataWithFile('posts', formData)
-
-        closeModal()
+        const result = await addDataWithFile('posts', formData)
+        if (result.status === 202) closeModal()
       }
     } catch (error) {
       console.log(error)
@@ -103,9 +104,9 @@ const FormModal: FC<FormModalProps> = ({ closeModal, current_ }) => {
       ? current_
       : {
           _id: generateID(),
-          title: '',
-          content: '',
-          category: '',
+          title: 'mager',
+          content: 'ere',
+          category: 'dev',
         },
     validate,
     onSubmit: async (data: Post) => {
@@ -115,8 +116,8 @@ const FormModal: FC<FormModalProps> = ({ closeModal, current_ }) => {
   })
 
   return (
-    <div className="absolute top-0 left-0 bg-background z-10 w-full flex items-center justify-center">
-      <div className="content w-full p-4">
+    <div className="absolute top-0 left-0 bg-popover/4 text-popover-foreground  backdrop-filter backdrop-blur-sm  z-10 w-full h-screen border flex items-center justify-center">
+      <div className="content bg-background border  w-[80%] p-4">
         <div className="header flex justify-between items-center p-2">
           <h2 className="font-bold text-2xl">Create a post</h2>
           <Button variant="destructive" onClick={closeModal}>
@@ -166,7 +167,6 @@ const FormModal: FC<FormModalProps> = ({ closeModal, current_ }) => {
                 className="input"
                 onChange={formik.handleChange}
                 value={formik.values.category}
-                placeholder="Select Category"
                 id=""
               >
                 {categories.map((category: Category) => {
@@ -196,7 +196,7 @@ const FormModal: FC<FormModalProps> = ({ closeModal, current_ }) => {
                 {' '}
                 Content
               </label>
-              
+
               <textarea
                 name="content"
                 onChange={formik.handleChange}

@@ -61,6 +61,11 @@ content: ["./src/**/*.{js,jsx,ts,tsx}",],
           from: { height: "0" },
           to: { height: "var(--radix-accordion-content-height)" },
         },
+        'spinner-grow': {
+          '0%': {  opacity: '1' },
+          '50%': { opacity: '0.5' },
+          '100%': {  opacity: '0.2' },
+        },
         "accordion-up": {
           from: { height: "var(--radix-accordion-content-height)" },
           to: { height: "0" },
