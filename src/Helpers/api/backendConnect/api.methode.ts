@@ -22,9 +22,7 @@ export const get = async (url: string, options: any = {}) => {
 }
 
 export const post = async (url: string, data: any, options: any = {}) => {
-  console.log(url)
   try {
-    console.log({ data })
     options.method = 'POST'
     options.body = JSON.stringify(data)
     options.headers = {
@@ -43,8 +41,6 @@ export const post = async (url: string, data: any, options: any = {}) => {
     }
     return await response.json()
   } catch (error: any) {
-    console.log(error.error)
-
     return { isSuccess: false, error }
   }
 }
@@ -73,13 +69,10 @@ export const postWithFile = async (
     }
     return await response.json()
   } catch (error: any) {
-    console.log(error.error)
-
     return { isSuccess: false, error }
   }
 }
 export const remove = async (url: string, options: any = {}) => {
-  console.log(url)
   try {
     options.method = 'DELETE'
 
@@ -104,7 +97,6 @@ export const remove = async (url: string, options: any = {}) => {
   }
 }
 export const put = async (url: string, data: any, options: any = {}) => {
-  console.log(url)
   try {
     options.method = 'PUT'
     options.body = data

@@ -2,7 +2,7 @@ import { useFormik } from 'formik'
 import { FC, useEffect, useState } from 'react'
 import { useSelector } from 'react-redux'
 import { Link, Navigate, useLocation } from 'react-router-dom'
-import { signup } from '../../Helpers/api/backendConnect/api'
+import { signup, verifyUser } from '../../Helpers/api/backendConnect/api'
 import { validateRegisterForm } from '../../Helpers/utiles/utils'
 import { getAuthState } from '../../reducer/selector/selector.types'
 import { Button } from '../Ui/Button'
@@ -15,6 +15,8 @@ const SignForm: FC<SignFormProps> = () => {
   const [formError, setFomError] = useState<string>('')
   const isAuth = useSelector(getAuthState)
   const location = useLocation()
+  const [emailError, setEmailError] = useState<string>('') // État pour gérer l'erreur d'email
+  const [enableButon, setEnableButton] = useState<boolean>(false)
 
   // On récupère l'URL de redirection, sinon on redirige vers la page d'accueil par défaut
   const from = location.state?.from?.pathname || '/'
@@ -33,8 +35,8 @@ const SignForm: FC<SignFormProps> = () => {
     },
     validate,
     onSubmit: async (user) => {
-      console.log("yes");
-      
+      console.log('yes')
+
       const result = await signup(user)
       if (result.status === 201) {
         setRedirect(true)
@@ -48,6 +50,33 @@ const SignForm: FC<SignFormProps> = () => {
       // alert(JSON.stringify(result, null, 2));
     },
   })
+  const checkEmailExists = async (email: string) => {
+    try {
+      const response = await verifyUser('users', { email })
+      return response.exist
+    } catch (error) {
+      console.error("Erreur lors de la vérification de l'email:", error)
+      return false
+    }
+  }
+
+  // Gérer la modification du champ email avec vérification asynchrone
+  const handleEmailChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    const { value } = e.target
+    formik.handleChange(e)
+    if (value) {
+      const emailExists = await checkEmailExists(value)
+      if (emailExists) {
+        setEnableButton(false)
+        setEmailError(
+          `user exist please <Link className="text-accent w-full font-bold" to={'/login'}> here</Link> login to continue `
+        )
+      } else {
+        setEnableButton(true)
+        setEmailError('')
+      }
+    }
+  }
 
   // const [state, setState] = useState<any>(null)
 
@@ -58,7 +87,7 @@ const SignForm: FC<SignFormProps> = () => {
     runLocalData()
   }, [])
   if (redirect) {
-    return <Navigate to={'/signin'} />
+    return <Navigate to={'/login'} />
   }
   if (isAuth) {
     return <Navigate to={from} />
@@ -143,12 +172,19 @@ const SignForm: FC<SignFormProps> = () => {
             type="email"
             placeholder="Lastname"
             name="email"
-            onChange={formik.handleChange}
+            onChange={handleEmailChange}
             value={formik.values.email}
           />
-          {formik.touched.email && formik.errors.email ? (
-            <div className="error">{formik.errors.email}</div>
+          {emailError ? (
+            <div className="error text-destructive font-bold">{emailError}</div>
+          ) : formik.touched.email && formik.errors.email ? (
+            <div className="error  text-destructive font-bold">
+              {formik.errors.email}
+            </div>
           ) : null}
+          {/* {formik.touched.email && formik.errors.email ? (
+            <div className="error">{formik.errors.email}</div>
+          ) : null} */}
         </div>
         <div className="password mt-4 grid w-full  items-center gap-1.5">
           <label
@@ -189,7 +225,11 @@ const SignForm: FC<SignFormProps> = () => {
           ) : null}
         </div>
         <div className="bt mt-4 w-full">
-          <Button type="submit" className="w-full font-bold text-2xl">
+          <Button
+            type="submit"
+            disabled={!enableButon}
+            className="w-full font-bold text-2xl"
+          >
             Create{' '}
           </Button>
         </div>

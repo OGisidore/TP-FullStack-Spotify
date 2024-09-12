@@ -22,6 +22,42 @@ export const getUser = async (entityName: string, id: string) => {
   const datas = await get(url)
   return datas
 }
+export const requestResetPassword = async (
+  entityName: string,
+  data: any,
+  code?: string
+) => {
+  let param
+  if (code) {
+    param = code
+  } else {
+    param = ''
+  }
+  const url = apiBase + entityName + '/request-reset-password' + param
+  const datas = await post(url, data)
+  return datas
+}
+export const verifyUser = async (entityName: string, data: any) => {
+  console.log(data)
+
+  const url = apiBase + entityName + '/verify-user'
+  const datas = await post(url, data)
+  return datas
+}
+export const verifyResetCode = async (entityName: string, data: any) => {
+  console.log(data)
+
+  const url = apiBase + entityName + '/verify-reset-code'
+  const datas = await post(url, data)
+  console.log(datas)
+
+  return datas
+}
+export const resetPassword = async (entityName: string, data: any) => {
+  const url = apiBase + entityName + '/reset-password'
+  const datas = await post(url, data)
+  return datas
+}
 
 export const getLatestData = async (entityName: string) => {
   const url = apiBase + entityName + '/latest'
@@ -47,6 +83,15 @@ export const getDatasByUserId = async (entityName: string, userId: string) => {
 export const signup = async (user: User) => {
   const url = apiBase + 'users/signup'
   const datas = await post(url, user)
+  return datas
+}
+export const updateUserinfo = async (
+  entityName: string,
+  id: string,
+  data: any
+) => {
+  const url = apiBase + entityName + '/' + id
+  const datas = await put(url, data)
   return datas
 }
 

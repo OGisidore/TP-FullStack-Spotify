@@ -170,3 +170,23 @@ export const validateLoginForm = (values: any) => {
   }
   return errors
 }
+export const validatePassword = (values: any) => {
+  const errors: any = {}
+  if (!values.password) {
+    errors.password = 'Required'
+  } else if (values.password.length < 6) {
+    errors.password = 'Must be 6 characters or more'
+  } else if (values.password.length > 20) {
+    errors.password = 'Must be 20 characters or less'
+  }
+
+  if (!values.confirmPassword) {
+    errors.confirmPassword = 'Required'
+  } else if (values.confirmPassword !== values.password) {
+    errors.confirmPassword = 'Password not match'
+  } else if (values.password.length < 6) {
+    errors.password = 'Must be 6 characters or more'
+  } else if (values.confirmPassword.length > 20) {
+    errors.confirmPassword = 'Must be 20 characters or less'
+  }
+}
