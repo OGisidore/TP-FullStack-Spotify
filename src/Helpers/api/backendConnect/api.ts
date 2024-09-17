@@ -81,7 +81,7 @@ export const getDatasByUserId = async (entityName: string, userId: string) => {
 }
 
 export const signup = async (user: User) => {
-  const url = apiBase + 'users/signup'
+  const url = apiBase + 'auth/register'
   const datas = await post(url, user)
   return datas
 }
@@ -121,7 +121,7 @@ export const deleteData = async (entityName: string, id: string) => {
 }
 
 export const signin = async (user: User) => {
-  const url = apiBase + 'users/login'
+  const url = apiBase + 'auth/login'
   const datas = await post(url, user)
   if (datas.isSuccess) {
     //auth success

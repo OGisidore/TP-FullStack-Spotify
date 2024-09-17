@@ -11,7 +11,7 @@ export const Posts: React.FC = () => {
   const getPosts = async () => {
     try {
       var JsonDatas: any = await getData('posts')
-      if (JsonDatas.status === 200) {
+      if (JsonDatas.isSuccess) {
         console.log(JsonDatas.posts)
 
         setPosts(JsonDatas.posts as Post[])

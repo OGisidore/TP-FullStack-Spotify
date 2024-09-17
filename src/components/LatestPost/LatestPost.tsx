@@ -19,7 +19,7 @@ const LatestPost: FC<LatestPostProps> = () => {
   const getlatesPost = async () => {
     try {
       const latest = await getLatestData('posts')
-      if (latest.status === 200) {
+      if (latest.isSuccess) {
         setLatestPost(latest.post)
         try {
           const author = await getUser('users', latest.post.userId)

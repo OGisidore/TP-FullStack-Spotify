@@ -14,7 +14,7 @@ export const PostId: React.FC = () => {
   const getPosts = async () => {
     try {
       var JsonDatas: any = await getDatasById('posts', id!)
-      if (JsonDatas.status === 201) {
+      if (JsonDatas.isSuccess) {
         setPost(JsonDatas.post as Post)
         try {
           const author = await getUser('users', JsonDatas.post.userId)

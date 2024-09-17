@@ -38,7 +38,9 @@ const SignForm: FC<SignFormProps> = () => {
       console.log('yes')
 
       const result = await signup(user)
-      if (result.status === 201) {
+      console.log(result);
+      
+      if (result.isSuccess) {
         setRedirect(true)
         setFomError('')
       } else {
