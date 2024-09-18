@@ -54,8 +54,8 @@ const SignForm: FC<SignFormProps> = () => {
   })
   const checkEmailExists = async (email: string) => {
     try {
-      const response = await verifyUser('users', { email })
-      return response.exist
+      const response = await verifyUser('auth', { email })
+      return response.isSuccess
     } catch (error) {
       console.error("Erreur lors de la vérification de l'email:", error)
       return false

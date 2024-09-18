@@ -19,8 +19,8 @@ const LoginForm: FC<LoginFormProps> = () => {
   const dispatch = useDispatch()
   const isAuth = useSelector(getAuthState)
   const location = useLocation()
-  const [emailError, setEmailError] = useState<string>('') // État pour gérer l'erreur d'email
-  // const [enableButon, setEnableButton] = useState<boolean>(false)
+  const [emailError, setEmailError] = useState<string>('')
+  const [enableButon, setEnableButton] = useState<boolean>(false)
 
   // On récupère l'URL de redirection, sinon on redirige vers la page d'accueil par défaut
   const from = location.state?.from?.pathname || '/'
@@ -52,8 +52,8 @@ const LoginForm: FC<LoginFormProps> = () => {
   })
   const checkEmailExists = async (email: string) => {
     try {
-      const response = await verifyUser('users', { email })
-      return response.exist // Si l'email existe déjà
+      const response = await verifyUser('auth', { email })
+      return response.isSuccess 
     } catch (error) {
       console.error("Erreur lors de la vérification de l'email:", error)
       return false
@@ -67,10 +67,10 @@ const LoginForm: FC<LoginFormProps> = () => {
     if (value) {
       const emailExists = await checkEmailExists(value)
       if (emailExists) {
-        // setEnableButton(true)
+        setEnableButton(true)
         setEmailError('')
       } else {
-        // setEnableButton(false)
+        setEnableButton(false)
         setEmailError('no user such this email a correct email please')
       }
     }
@@ -166,7 +166,7 @@ const LoginForm: FC<LoginFormProps> = () => {
         <div className="bt mt-4 w-full">
           <Button
             type="submit"
-            // disabled={!enableButon}
+            disabled={!enableButon}
             className="w-full font-bold text-2xl"
           >
             Login{' '}

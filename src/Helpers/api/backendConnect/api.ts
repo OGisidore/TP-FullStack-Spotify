@@ -40,7 +40,7 @@ export const requestResetPassword = async (
 export const verifyUser = async (entityName: string, data: any) => {
   console.log(data)
 
-  const url = apiBase + entityName + '/verify-user'
+  const url = apiBase + entityName + '/verify-email'
   const datas = await post(url, data)
   return datas
 }

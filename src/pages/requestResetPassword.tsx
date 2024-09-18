@@ -15,8 +15,8 @@ export const RequestResetPassword: React.FC = () => {
   const [withCode, setWithCode] = useState<boolean>(false)
   const checkEmailExists = async (email: string) => {
     try {
-      const response = await verifyUser('users', { email })
-      return response.exist
+      const response = await verifyUser('auth', { email })
+      return response.isSuccess
     } catch (error) {
       console.error("Erreur lors de la vérification de l'email:", error)
       return false
@@ -42,11 +42,11 @@ export const RequestResetPassword: React.FC = () => {
     try {
       const email = inputemail
       const response = await requestResetPassword(
-        'users',
+        'auth',
         { email },
-        '-By-Code'
+    
       )
-      if (response.ok) {
+      if (response.isSuccess) {
         setItem('email', email)
         setWithCode(true)
         console.log(email)
@@ -60,7 +60,7 @@ export const RequestResetPassword: React.FC = () => {
     try {
       const email = inputemail
       const response = await requestResetPassword(
-        'users',
+        'auth',
         { email },
       )
       if (response.ok) {
